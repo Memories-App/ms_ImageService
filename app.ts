@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import { imageRoutes } from './src/routes/imageRoutes';
+import serviceRoutes from './src/routes/serviceRoutes';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(cors());            // middleware that enables Cross-Origin Resource Sha
 app.use(helmet());          //  adds various security headers to enhance the security of your application.
 
 // Routes
+app.use('/', serviceRoutes) // Mount the serviceRoutes middleware
 app.use('/images', imageRoutes);
 
 // Error handling middleware
@@ -23,7 +25,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

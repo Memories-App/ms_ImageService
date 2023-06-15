@@ -1,10 +1,15 @@
 import express from 'express';
+
+import { header, body } from 'express-validator';
 import { ImageController } from '../controllers/imageController';
+import authenticationMiddleware from '../services/authenticationMiddleware';
 
 export const imageRoutes = express.Router();
 
-imageRoutes.post('/', ImageController.uploadImage);
-imageRoutes.get('/:imageId', ImageController.getImage);
-imageRoutes.delete('/:imageId', ImageController.deleteImage);
+imageRoutes.post('/upload', 
+authenticationMiddleware,
+    header('Authorization' ).notEmpty().withMessage('Authentication header is missing'),
+    body('image').notEmpty().withMessage('Image is missing'),
+    ImageController.uploadImage);
 
 // Add more routes as needed

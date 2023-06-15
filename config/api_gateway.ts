@@ -1,0 +1,1 @@
+export const apiGateway = "http://localhost:3000"
