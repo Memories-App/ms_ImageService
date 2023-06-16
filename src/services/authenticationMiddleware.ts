@@ -23,11 +23,14 @@ const authenticationMiddleware = async (req: Request, res: Response, next: NextF
 
     const data = await response.json();
     
-    if (response.status !== 200 || data.tokenValid === false) {
+    if (!data.tokenValid) {
       // Token is not valid or verification failed
       return res.status(401).json({ error: "Unauthorized" });
     }
     
+    // Fix this later
+    (req as any).tokenData = data;
+
     // Token is valid, proceed to the next middleware or route handler
     next();
   } catch (error) {

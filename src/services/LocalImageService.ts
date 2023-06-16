@@ -11,7 +11,7 @@ export const LocalImageService = {
 
             // Image Name
             const fileID = `${randomUUID()}`;
-            const fileDate = `${Date.now()}`;
+            const fileDate: Number = Date.now();
             const fileName = `${fileID}_${fileDate}.png`;
 
             const fileSize = decodedImage.length;
