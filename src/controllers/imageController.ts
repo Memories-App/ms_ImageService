@@ -48,6 +48,12 @@ export const ImageController = {
     }
   },
 
+  /**
+ * Description: Retrieves the IDs of images for a user grouped by image type.
+ * Parameters to pass in HTTP Request:
+ * - Headers:
+ *   - Authorization: The user's authorization token.
+ */
   getImageIds: async (req: Request, res: Response) => {
     try {
       // Get E-Mail from the Authorization header
@@ -76,6 +82,14 @@ export const ImageController = {
       res.status(500).json({ error: error });
     }
   },
+
+  /**
+ * Description: Retrieves the image data for a specific image ID.
+ * Parameters to pass in HTTP Request:
+ * - Headers:
+ *   - Authorization: The user's authorization token.
+ *   - imageid: The ID of the image to retrieve.
+ */
   getImageById: async (req: Request, res: Response) => {
     try {
       // Get E-Mail from the Authorization header
