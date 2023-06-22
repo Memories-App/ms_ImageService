@@ -25,4 +25,22 @@ imageRoutes.post('/upload',
     ImageController.uploadImage
 );
 
+imageRoutes.get("/getImageIds",
+    authenticationMiddleware,
+    [
+        header('Authorization').notEmpty().withMessage('Authentication header is missing')
+    ],
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: 'Missing parameters', missingParams: errors.array() });
+        }
+
+        // If all parameters are present, proceed to the controller
+        next();
+    },
+    ImageController.getImageIds
+)
+
 // Add more routes as needed

@@ -20,6 +20,11 @@ export const Servicecontroller = {
                         path: '/images/upload',
                         description: 'Upload an Image',
                     },
+                    {
+                        method: 'GET',
+                        path: '/images/getImage',
+                        description: 'Get an Image',
+                    },
                 ]
              });
         }
