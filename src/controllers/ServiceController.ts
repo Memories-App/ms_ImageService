@@ -13,7 +13,7 @@ export const Servicecontroller = {
                     {
                         method: 'GET',
                         path: '/',
-                        description: 'Get all available routes and sercice information',
+                        description: 'Get all available routes and service information',
                     },
                     {
                         method: 'POST',
@@ -22,8 +22,8 @@ export const Servicecontroller = {
                     },
                     {
                         method: 'GET',
-                        path: '/images/getImage',
-                        description: 'Get an Image',
+                        path: '/images/getImageIds',
+                        description: 'Get all IDs of all images for the user',
                     },
                 ]
              });
