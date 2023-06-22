@@ -25,6 +25,11 @@ export const Servicecontroller = {
                         path: '/images/getImageIds',
                         description: 'Get all IDs of all images for the user',
                     },
+                    {
+                        method: 'GET',
+                        path: '/images/getImageById',
+                        description: 'Get an image by ID',
+                    }
                 ]
              });
         }

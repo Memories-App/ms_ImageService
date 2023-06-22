@@ -34,7 +34,22 @@ export const LocalImageService = {
             };
         } catch (error) {
             console.error(error);
-            throw ({message: 'Error occurred while saving image',error});
+            throw ({ message: 'Error occurred while saving image', error });
+        }
+    },
+    retriveImage: async (imagePath: string) => {
+        try {
+            // Read file from local file system
+            const image = fs.readFileSync(imagePath);
+
+            // Encode image to base64
+            const encodedImage = Buffer.from(image).toString('base64');
+
+            // Return encoded image
+            return encodedImage;
+        } catch (error) {
+            console.error(error);
+            throw ({ message: 'Error occurred while retrieving image', error });
         }
     }
-}
+};

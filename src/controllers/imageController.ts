@@ -52,29 +52,54 @@ export const ImageController = {
     try {
       // Get E-Mail from the Authorization header
       const userEmail = (req as any).tokenData.profile.email;
-  
+
       // Get user ID from email
       const { _id: userId } = await User.findOne({ email: userEmail });
-  
+
       // Get all distinct image types from the database
       const imageTypes = await ImageType.distinct('type');
-  
+
       // Find all images for the user with the specified types
       const images = await Image.find({ owner: userId, image_type: { $in: imageTypes } }, 'imageID image_type');
-  
+
       // Group image IDs by type
       const imageIdsByType = {};
-  
+
       imageTypes.forEach((type) => {
         const image = images.find((img) => img.image_type === type);
         imageIdsByType[type] = image ? image.imageID : null;
       });
-  
+
       res.status(200).json(imageIdsByType);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: error });
     }
-  }  
+  },
+  getImageById: async (req: Request, res: Response) => {
+    try {
+      // Get E-Mail from the Authorization header
+      const userEmail = (req as any).tokenData.profile.email;
+
+      // Get user ID from email
+      const { _id: userId } = await User.findOne({ email: userEmail });
+
+      // Get Image by ID req.headers.imageid
+      const { imagePath, imageDate } = await Image.findOne({ owner: userId, imageID: req.headers.imageid });
+
+      // Retrieve image from local file system
+      const image = await LocalImageService.retriveImage(imagePath);
+
+      // Return image
+      res.status(200).json({
+        image: image,
+        date: imageDate,
+      });
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error });
+    }
+  },
 };
 
