@@ -1,5 +1,6 @@
 import User from "../models/user";
 import Image from "../models/images";
+import ImageType from "../models/image_type";
 
 const DBService = {
     async saveImageToDatabase(
@@ -40,11 +41,16 @@ const DBService = {
     async checkDuplicateImage(userEmail: string, imageType: string) {
         // Find the user in the user collection
         const user = await User.findOne({ email: userEmail });
-
         const existingImage = await Image.findOne({ owner: user?._id, image_type: imageType });
 
-        return existingImage ? true : false;
-    }
+        if (!!existingImage) throw "Image of that Type has already been created."
+
+        const imageTypeExists = await ImageType.exists({ type: imageType });
+        if(!imageTypeExists) throw "Invalid Image Type"
+
+        return true
+      }
+      
 };
 
 export default DBService;

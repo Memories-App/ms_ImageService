@@ -7,6 +7,8 @@ import mongoose from 'mongoose';
 import { imageRoutes } from './src/routes/imageRoutes';
 import serviceRoutes from './src/routes/serviceRoutes';
 
+import ImageType from './src/models/image_type';
+
 dotenv.config();
 
 const app = express();
@@ -18,9 +20,22 @@ app.use(helmet());          //  adds various security headers to enhance the sec
 
 // Connect to MongoDB
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.ueytzgw.mongodb.net/?retryWrites=true&w=majority`)
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
+.then(async () => {
+  console.log('Connected to MongoDB');
+  
+  const imageTypesToCheck = ['moon', 'core', 'timecapsule'];
+
+  // Check if image types exist, and create them if they don't
+  for (const imageType of imageTypesToCheck) {
+    const existingType = await ImageType.findOne({ type: imageType });
+
+    if (!existingType) {
+      const newImageType = new ImageType({ type: imageType, date: new Date() });
+      await newImageType.save();
+      console.log(`Created image type: ${imageType}`);
+    }
+  }
+})
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error);
     process.exit(1); // Exit the process if unable to connect to MongoDB

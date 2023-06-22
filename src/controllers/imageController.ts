@@ -16,11 +16,7 @@ export const ImageController = {
       // Check if the user already has an image of the same type
       const hasDuplicateImage = await DBService.checkDuplicateImage(email, imageType);
 
-      if (hasDuplicateImage) {
-        const error = 'Image type already used';
-        const createdAt = new Date();
-        return res.status(400).json({ error, createdAt });
-      }
+      console.log(hasDuplicateImage);
 
       // Call Image save function
       const { fileID, fileDate, filePath, fileSize, fileName } = await LocalImageService.saveImage(base64_image);
@@ -41,7 +37,7 @@ export const ImageController = {
       res.status(201).json(dbResult);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: error });
     }
   },
 };
