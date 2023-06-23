@@ -1,6 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import axios from "axios";
-import { apiGateway } from "../../config/api_gateway";
+import { apiGatewayDev, apiGatewayProd } from "../../config/api_gateway";
+
+const environment = process.env.ENV || 'production';
+
+let apiGateway: string;
+
+if (environment === 'production') {
+  apiGateway = apiGatewayProd;
+} else {
+  apiGateway = apiGatewayDev;
+}
 
 const authenticationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -11,6 +21,8 @@ const authenticationMiddleware = async (req: Request, res: Response, next: NextF
       return res.status(401).json({ error: "Unauthorized" });
     }
     
+
+
     // Send Post to API Gateway to verify token
     const response = await fetch(`${apiGateway}/authentication/auth/verifyToken`, {
         method: "POST",
