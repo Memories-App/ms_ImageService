@@ -99,15 +99,20 @@ export const ImageController = {
       const { _id: userId } = await User.findOne({ email: userEmail });
 
       // Get Image by ID req.headers.imageid
-      const { imagePath, imageDate } = await Image.findOne({ owner: userId, imageID: req.headers.imageid });
+      const { imagePath, imageDate, image_type } = await Image.findOne({ owner: userId, imageID: req.headers.imageid });
 
       // Retrieve image from local file system
       const image = await LocalImageService.retriveImage(imagePath);
+
+      const { expiration } = await ImageType.findOne({ type: image_type });
+      
+
 
       // Return image
       res.status(200).json({
         image: image,
         date: imageDate,
+        expiration: expiration,
       });
 
     } catch (error) {

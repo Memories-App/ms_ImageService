@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import axios from "axios";
 import { apiGatewayDev, apiGatewayProd } from "../../config/api_gateway";
 
-const environment = process.env.ENV || 'production';
+const environment = process.env.ENV ;
 
 let apiGateway: string;
 
@@ -11,6 +11,8 @@ if (environment === 'production') {
 } else {
   apiGateway = apiGatewayDev;
 }
+
+console.log(`API Gateway: ${apiGateway}`)
 
 const authenticationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {

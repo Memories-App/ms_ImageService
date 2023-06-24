@@ -20,22 +20,27 @@ app.use(helmet());          //  adds various security headers to enhance the sec
 
 // Connect to MongoDB
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.ueytzgw.mongodb.net/?retryWrites=true&w=majority`)
-.then(async () => {
-  console.log('Connected to MongoDB');
-  
-  const imageTypesToCheck = ['moon', 'core', 'timecapsule'];
+  .then(async () => {
+    console.log('Connected to MongoDB');
 
-  // Check if image types exist, and create them if they don't
-  for (const imageType of imageTypesToCheck) {
-    const existingType = await ImageType.findOne({ type: imageType });
+    const imageTypesToCheck = {
+      moon: 30,
+      core: 90,
+      timecapsule: 365,
+    };
 
-    if (!existingType) {
-      const newImageType = new ImageType({ type: imageType, date: new Date() });
-      await newImageType.save();
-      console.log(`Created image type: ${imageType}`);
+    // Check if image types exist, and create them if they don't
+    for (const imageType in imageTypesToCheck) {
+      const existingType = await ImageType.findOne({ type: imageType });
+
+      if (!existingType) {
+        const expirationDays = imageTypesToCheck[imageType];
+        const newImageType = new ImageType({ type: imageType, date: new Date(), expiration: expirationDays });
+        await newImageType.save();
+        console.log(`Created image type: ${imageType}`);
+      }
     }
-  }
-})
+  })
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error);
     process.exit(1); // Exit the process if unable to connect to MongoDB
@@ -43,9 +48,9 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONG
 
 
 // Allow parsing of application/x-www-form-urlencoded post data
-app.use(bodyParser.text({limit: '10mb'}));
-app.use(bodyParser.json({limit: '10mb'}));
-app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
+app.use(bodyParser.text({ limit: '10mb' }));
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
 // Routes
 app.use('/', serviceRoutes) // Mount the serviceRoutes middleware
